@@ -1,0 +1,50 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "url": "/ping"
+      },
+      "response": {
+        "body": "Pong!"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/characters/1"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "id": 1,
+          "name": "Charlie B."
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/characters"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": [
+          {
+            "id": 1,
+            "name": "Charlie B."
+          },
+          {
+            "id": 2,
+            "name": "Snoopy D."
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
+  ]
+}

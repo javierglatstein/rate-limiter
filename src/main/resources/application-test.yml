@@ -1,0 +1,30 @@
+micronaut:
+  jms:
+    sqs:
+      enabled: false
+
+proxy:
+  host:
+    scheme: http
+    name: localhost
+    port: 3055
+
+aws:
+  region: us-east-1
+  accessKeyId: aws-local-key
+  secretKey: aws-local-secret-key
+
+queues:
+  scheduled-messages:
+    name: "local-scheduled-messages"
+  processed-messages:
+    name: "local-processed-messages"
+
+rate-limiter:
+  enabled: true
+  max-requests: 1
+  frequency-amount: 1
+  frequency-unit: SECONDS
+  table-name: local-table
+  bucket-name: local-bucket
+  shards: 1

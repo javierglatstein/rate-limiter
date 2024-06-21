@@ -1,0 +1,25 @@
+micronaut:
+  jms:
+    sqs:
+      enabled: true
+
+proxy:
+  host:
+    scheme: http
+    name: ${PROXY_HOST_NAME:localhost}
+    port: ${PROXY_HOST_PORT:3055}
+
+queues:
+  scheduled-messages:
+    name: ${QUEUES_SCHEDULED_MESSAGES_NAME:local-scheduled-messages}
+  processed-messages:
+    name: ${QUEUES_SCHEDULED_MESSAGES_NAME:local-processed-messages}
+
+rate-limiter:
+  enabled: true
+  max-requests: 6
+  frequency-amount: 1
+  frequency-unit: MINUTES
+  table-name: local-table
+  bucket-name: local-bucket
+  shards: 6

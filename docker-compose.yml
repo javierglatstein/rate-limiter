@@ -1,0 +1,59 @@
+services:
+  proxy-service:
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+    depends_on:
+      localstack:
+        condition: service_healthy
+      mockserver:
+        condition: service_started
+    environment:
+      - aws.region=us-east-1
+      - aws.accessKeyId=aws-local-key
+      - aws.secretKey=aws-local-secret-key
+      - aws.sqs.endpoint=http://localstack:4566
+      - aws.sns.endpoint=http://localstack:4566
+      - MICRONAUT_ENVIRONMENTS=compose
+      - PROXY_HOST_NAME=mockserver
+    networks:
+      - proxy_default
+
+  localstack:
+    image: localstack/localstack:3.5
+    container_name: rate-limiter-localstack
+    environment:
+      - SERVICES=dynamodb,sqs
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DEFAULT_REGION=us-east-1
+      - DEBUG=1
+      - PERSISTENCE=1
+    healthcheck:
+      test: >-
+        awslocal sqs list-queues && 
+        awslocal dynamodb list-tables
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - '4566:4566'
+      - '8055:8080'
+    volumes:
+      - './src/test/resources/localstack/scripts:/etc/localstack/init/ready.d'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    networks:
+      - proxy_default
+
+  mockserver:
+    image: wiremock/wiremock:2.32.0
+    ports:
+      - '3055:8080'
+    volumes:
+      - './src/test/resources/mocks:/home/wiremock'
+    networks:
+      - proxy_default
+
+networks:
+  proxy_default:
+    name: proxy_default
